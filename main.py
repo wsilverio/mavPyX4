@@ -5,29 +5,43 @@ import sys
 sys.path.insert(1, 'mavlink/pymavlink')
 
 import mavutil
-
 from mavlink_common import *
 
-# from argparse import ArgumentParser
+from argparse import ArgumentParser
 
 def main():
-    mavDisp = mavutil.mavlink_connection("/dev/ttyACM0", 57600)
-    
+
+    port = '/dev/ttyACM0'
+    baud = 57600
+
+    parser = ArgumentParser(description = 'Aquisição de dados PX4Flow')
+
+    parser.add_argument('--device', '-d', action = 'store', dest = 'port',
+                           default = '/dev/ttyACM0', required = False,
+                           help = 'Configura porta serial (padrão: /dev/ttyACM0)')
+
+    parser.add_argument('--baud', '-b', action = 'store', dest = 'baud',
+                           default = 57600, required = False,
+                           help = 'Configura baud rate (padrão: 57600)')
+
+    arguments = parser.parse_args()
+
+    mavDisp = mavutil.mavlink_connection(port, baud) 
     mavDisp.wait_heartbeat()
-    
     print("Heartbeat from APM (system %u component %u)\n" % (mavDisp.target_system, mavDisp.target_component ))
 
     cin = ''
+
     while cin is not 's':
         msg = mavDisp.recv_msg()
         
         # print msg
 
-        msg_id = msg.get_type()
-
-        if msg_id == None: 
+        if msg is None: 
             print "NoneType"
             continue
+
+        msg_id = msg.get_type()
 
         print '\n%s:' % msg_id
 
@@ -63,12 +77,38 @@ def main():
             print 'time_delta_distance_us =', msg.time_delta_distance_us
             print 'distance =', msg.distance
 
+        elif msg_id == 'DATA_TRANSMISSION_HANDSHAKE':
+            print 'type =', msg.type
+            print 'size =', msg.size
+            print 'width =', msg.width
+            print 'height =', msg.height
+            print 'packets =', msg.packets
+            print 'payload =', msg.payload
+            print 'jpg_quality =', msg.jpg_quality
+
+        elif msg_id == 'ENCAPSULATED_DATA':
+            print 'seqnr =', msg.seqnr
+            print 'data =', msg.data
+            print 'len:', len(msg.data)
+
+        elif msg_id == 'BAD_DATA':
+            print 'data =', msg.data
+            print 'reason =', msg.reason
+
         else:
-            print msg.get_fieldnames()
+            print msg
+            # print msg.get_fieldnames()
+
+        # if msg_id != 'BAD_DATA' and msg_id != 'ENCAPSULATED_DATA':
+            # cin = raw_input('\nSair? (s/n): ')
 
         cin = raw_input('\nSair? (s/n): ')
 
 if __name__ == '__main__':
     main()
 
+    '''
+    PARAM_VALUE:
+    ['param_id', 'param_value', 'param_type', 'param_count', 'param_index']
 
+    '''
