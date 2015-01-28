@@ -11,8 +11,7 @@ from argparse import ArgumentParser
 
 def main():
 
-    port = '/dev/ttyACM0'
-    baud = 57600
+    port, baud = '/dev/ttyACM0', 57600
 
     parser = ArgumentParser(description = 'Aquisição de dados PX4Flow')
 
@@ -35,30 +34,31 @@ def main():
     while cin is not 's':
         msg = mavDisp.recv_msg()
         
-        # print msg
+        print msg
 
         if msg is None: 
             print "NoneType"
             continue
 
-        msg_id = msg.get_type()
+        msg_type = msg.get_type()
 
-        print '\n%s:' % msg_id
+        print '\n%s:' % msg_type
 
-        if msg_id == 'NAMED_VALUE_FLOAT':
+        if msg_type == 'NAMED_VALUE_FLOAT':
+            # for var in 
             print 'name =', msg.name
             print 'value =', msg.value
 
-        elif msg_id == 'NAMED_VALUE_INT':
+        elif msg_type == 'NAMED_VALUE_INT':
             print 'name =', msg.name
             print 'value =', msg.value
 
-        elif msg_id == 'DEBUG_VECT':
+        elif msg_type == 'DEBUG_VECT':
             print 'x =', msg.x
             print 'y =', msg.y
             print 'z =', msg.z
 
-        elif msg_id == 'OPTICAL_FLOW':
+        elif msg_type == 'OPTICAL_FLOW':
             print 'flow_x =', msg.flow_x
             print 'flow_y =', msg.flow_y
             print 'flow_comp_m_x =', msg.flow_comp_m_x
@@ -66,7 +66,7 @@ def main():
             print 'quality =', msg.quality
             print 'ground_distance =', msg.ground_distance
 
-        elif msg_id == 'OPTICAL_FLOW_RAD':
+        elif msg_type == 'OPTICAL_FLOW_RAD':
             print 'integrated_x =', msg.integrated_x
             print 'integrated_y =', msg.integrated_y
             print 'integrated_xgyro =', msg.integrated_xgyro
@@ -77,7 +77,7 @@ def main():
             print 'time_delta_distance_us =', msg.time_delta_distance_us
             print 'distance =', msg.distance
 
-        elif msg_id == 'DATA_TRANSMISSION_HANDSHAKE':
+        elif msg_type == 'DATA_TRANSMISSION_HANDSHAKE':
             print 'type =', msg.type
             print 'size =', msg.size
             print 'width =', msg.width
@@ -86,12 +86,12 @@ def main():
             print 'payload =', msg.payload
             print 'jpg_quality =', msg.jpg_quality
 
-        elif msg_id == 'ENCAPSULATED_DATA':
+        elif msg_type == 'ENCAPSULATED_DATA':
             print 'seqnr =', msg.seqnr
             print 'data =', msg.data
             print 'len:', len(msg.data)
 
-        elif msg_id == 'BAD_DATA':
+        elif msg_type == 'BAD_DATA':
             print 'data =', msg.data
             print 'reason =', msg.reason
 
@@ -99,7 +99,7 @@ def main():
             print msg
             # print msg.get_fieldnames()
 
-        # if msg_id != 'BAD_DATA' and msg_id != 'ENCAPSULATED_DATA':
+        # if msg_type != 'BAD_DATA' and msg_type != 'ENCAPSULATED_DATA':
             # cin = raw_input('\nSair? (s/n): ')
 
         cin = raw_input('\nSair? (s/n): ')
