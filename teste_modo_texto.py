@@ -31,84 +31,31 @@ def main():
 
     cin = ''
 
-    while cin is not 's':
+    while cin != 's':
         msg = mavDisp.recv_msg()
         
-        print msg
+        # print msg
 
         if msg is None: 
             print "NoneType"
-            continue
 
-        msg_type = msg.get_type()
-
-        print '\n%s:' % msg_type
-
-        if msg_type == 'NAMED_VALUE_FLOAT':
-            # for var in 
-            print 'name =', msg.name
-            print 'value =', msg.value
-
-        elif msg_type == 'NAMED_VALUE_INT':
-            print 'name =', msg.name
-            print 'value =', msg.value
-
-        elif msg_type == 'DEBUG_VECT':
-            print 'x =', msg.x
-            print 'y =', msg.y
-            print 'z =', msg.z
-
-        elif msg_type == 'OPTICAL_FLOW':
-            print 'flow_x =', msg.flow_x
-            print 'flow_y =', msg.flow_y
-            print 'flow_comp_m_x =', msg.flow_comp_m_x
-            print 'flow_comp_m_y =', msg.flow_comp_m_y
-            print 'quality =', msg.quality
-            print 'ground_distance =', msg.ground_distance
-
-        elif msg_type == 'OPTICAL_FLOW_RAD':
-            print 'integrated_x =', msg.integrated_x
-            print 'integrated_y =', msg.integrated_y
-            print 'integrated_xgyro =', msg.integrated_xgyro
-            print 'integrated_ygyro =', msg.integrated_ygyro
-            print 'integrated_zgyro =', msg.integrated_zgyro
-            print 'temperature =', msg.temperature
-            print 'quality =', msg.quality
-            print 'time_delta_distance_us =', msg.time_delta_distance_us
-            print 'distance =', msg.distance
-
-        elif msg_type == 'DATA_TRANSMISSION_HANDSHAKE':
-            print 'type =', msg.type
-            print 'size =', msg.size
-            print 'width =', msg.width
-            print 'height =', msg.height
-            print 'packets =', msg.packets
-            print 'payload =', msg.payload
-            print 'jpg_quality =', msg.jpg_quality
-
-        elif msg_type == 'ENCAPSULATED_DATA':
-            print 'seqnr =', msg.seqnr
-            print 'data =', msg.data
-            print 'len:', len(msg.data)
-
-        elif msg_type == 'BAD_DATA':
-            print 'data =', msg.data
-            print 'reason =', msg.reason
+        elif msg.get_type() == 'BAD_DATA' and msg.get_type() == 'ENCAPSULATED_DATA':
+            print msg.get_type()
 
         else:
-            print msg
-            # print msg.get_fieldnames()
+            dic = msg.to_dict()
 
-        # if msg_type != 'BAD_DATA' and msg_type != 'ENCAPSULATED_DATA':
-            # cin = raw_input('\nSair? (s/n): ')
+            for field in msg.get_fieldnames():
+                print field, ': ', dic[field]
 
         cin = raw_input('\nSair? (s/n): ')
+        print ''
+
+        # ex.
+        # if msg.get_type() == 'ENCAPSULATED_DATA':
+        #     print 'seqnr =', msg.seqnr
+        #     print 'data =', msg.data
+        #     print 'len:', len(msg.data)
 
 if __name__ == '__main__':
     main()
-
-    '''
-    PARAM_VALUE:
-    ['param_id', 'param_value', 'param_type', 'param_count', 'param_index']
-
-    '''
