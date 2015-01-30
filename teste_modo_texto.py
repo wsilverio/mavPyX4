@@ -5,7 +5,7 @@ import sys
 sys.path.insert(1, 'mavlink/pymavlink')
 
 import mavutil
-from mavlink_common import *
+# from mavlink_common import *
 
 from argparse import ArgumentParser
 
