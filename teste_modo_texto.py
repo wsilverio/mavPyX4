@@ -39,23 +39,37 @@ def main():
         if msg is None: 
             print "NoneType"
 
-        elif msg.get_type() == 'BAD_DATA' and msg.get_type() == 'ENCAPSULATED_DATA':
+        elif msg.get_type() == 'BAD_DATA' or msg.get_type() == 'ENCAPSULATED_DATA':
             print msg.get_type()
 
         else:
+            print '\n'
             dic = msg.to_dict()
 
             for field in msg.get_fieldnames():
                 print field, ': ', dic[field]
 
-        cin = raw_input('\nSair? (s/n): ')
-        print ''
+            cin = raw_input('\nSair? (s/n): ')
 
         # ex.
         # if msg.get_type() == 'ENCAPSULATED_DATA':
         #     print 'seqnr =', msg.seqnr
         #     print 'data =', msg.data
         #     print 'len:', len(msg.data)
+
+
+        # Traceback (most recent call last):
+        # File "./teste_modo_texto.py", line 61, in <module>
+        #     main()
+        # File "./teste_modo_texto.py", line 35, in main
+        #     msg = mavDisp.recv_msg()
+        # File "mavlink/pymavlink/mavutil.py", line 286, in recv_msg
+        #     s = self.recv(n)
+        # File "mavlink/pymavlink/mavutil.py", line 730, in recv
+        #     ret = self.port.read(n)
+        # File "/usr/lib/python2.7/dist-packages/serial/serialposix.py", line 453, in read
+        #     buf = os.read(self.fd, size-len(read))
+        # OSError: [Errno 11] Resource temporarily unavailable
 
 if __name__ == '__main__':
     main()
